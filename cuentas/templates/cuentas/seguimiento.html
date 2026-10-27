@@ -1,0 +1,35 @@
+{% extends 'cuentas/base.html' %}
+{% block content %}
+<h3 class="fw-bold mb-0">Seguimiento del plan</h3>
+<div class="text-muted mb-4">Panadería El Valle</div>
+
+<div class="row g-3 mb-4">
+    <div class="col-md-7">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body">
+                <div class="fw-semibold mb-2">Progreso general</div>
+                <div class="d-flex align-items-center gap-3">
+                    <div class="progress flex-grow-1" style="height: 14px;">
+                        <div class="progress-bar bg-success" style="width: 40%"></div>
+                    </div>
+                    <strong>40%</strong>
+                </div>
+                <small class="text-muted">2 de 5 acciones completadas</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-5">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body">
+                <div class="fw-semibold mb-2">Estado de acciones</div>
+                <div class="d-flex justify-content-between"><span><span class="punto bg-success me-2"></span>Completadas</span><strong>2</strong></div>
+                <div class="d-flex justify-content-between"><span><span class="punto bg-warning me-2"></span>En progreso</span><strong>1</strong></div>
+                <div class="d-flex justify-content-between"><span><span class="punto bg-secondary me-2"></span>Pendientes</span><strong>2</strong></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<h5 class="fw-bold">Listado de acciones</h5>
+{% include 'cuentas/_lista_acciones.html' %}
+{% endblock %}

@@ -1,0 +1,46 @@
+{% extends 'cuentas/base.html' %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-start">
+    <div>
+        <h3 class="fw-bold mb-0">Resultado del diagnóstico</h3>
+        <div class="text-muted">Panadería El Valle</div>
+    </div>
+    <small class="text-muted">Fecha: 12/08/2026</small>
+</div>
+
+<div class="card border-0 shadow-sm my-4">
+    <div class="card-body">
+        <div class="fw-semibold mb-2">Nivel de madurez digital</div>
+        <div class="d-flex gap-1 mb-2">
+            <div class="nivel-segmento on"></div>
+            <div class="nivel-segmento on"></div>
+            <div class="nivel-segmento"></div>
+            <div class="nivel-segmento"></div>
+            <div class="nivel-segmento"></div>
+        </div>
+        <div class="text-center text-muted small">Básico</div>
+    </div>
+</div>
+
+<h5 class="fw-bold">Principales brechas identificadas</h5>
+<div class="card border-0 shadow-sm mb-2">
+    <div class="card-body py-2 d-flex align-items-center gap-3">
+        <span class="punto bg-danger"></span>
+        <div><div class="fw-semibold">Gestión interna</div><small class="text-muted">Uso limitado de herramientas digitales</small></div>
+    </div>
+</div>
+<div class="card border-0 shadow-sm mb-2">
+    <div class="card-body py-2 d-flex align-items-center gap-3">
+        <span class="punto bg-warning"></span>
+        <div><div class="fw-semibold">Comercialización</div><small class="text-muted">Baja presencia en canales digitales</small></div>
+    </div>
+</div>
+<div class="card border-0 shadow-sm mb-2">
+    <div class="card-body py-2 d-flex align-items-center gap-3">
+        <span class="punto bg-success"></span>
+        <div><div class="fw-semibold">Finanzas</div><small class="text-muted">Falta de registro y análisis de datos</small></div>
+    </div>
+</div>
+
+<a href="{% url 'plan' %}" class="btn btn-primary w-100 py-2 mt-3">Generar plan de transformación digital</a>
+{% endblock %}

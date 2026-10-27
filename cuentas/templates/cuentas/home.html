@@ -1,0 +1,23 @@
+{% extends 'cuentas/base.html' %}
+{% block content %}
+<h2 class="fw-bold">Bienvenido/a</h2>
+<p class="text-muted">Gestiona el diagnóstico y el plan de transformación digital de tu Pyme.</p>
+
+<label class="form-label fw-semibold">Selecciona tu Pyme</label>
+<select class="form-select mb-3">
+    <option>Panadería El Valle</option>
+</select>
+
+<div class="card border-0 shadow-sm mb-3">
+    <div class="card-body d-flex align-items-center gap-4">
+        <i class="bi bi-shop display-3 text-secondary"></i>
+        <div>
+            <div><strong>Rubro:</strong> Alimentación</div>
+            <div><strong>Tamaño:</strong> Pequeña</div>
+            <div><strong>Región:</strong> Valparaíso</div>
+        </div>
+    </div>
+</div>
+
+<a href="{% url 'diagnostico' %}" class="btn btn-primary w-100 py-2">Ver diagnóstico y plan</a>
+{% endblock %}
