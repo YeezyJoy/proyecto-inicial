@@ -5,22 +5,25 @@
 <div class="card border-0 shadow-sm mt-2">
     <div class="card-body">
         <div class="d-flex align-items-center gap-3 mb-3">
-            <span class="badge bg-danger-subtle text-danger-emphasis">Alta prioridad</span>
-            <h4 class="fw-bold mb-0 flex-grow-1">Implementar sistema de inventario</h4>
-            <span class="badge bg-warning-subtle text-warning-emphasis">En progreso</span>
+            <span class="badge bg-{{ accion.color_prioridad }}-subtle text-{{ accion.color_prioridad }}-emphasis">{{ accion.get_prioridad_display }} prioridad</span>
+            <h4 class="fw-bold mb-0 flex-grow-1">{{ accion.titulo }}</h4>
+            <span class="badge bg-{{ accion.color_estado }}-subtle text-{{ accion.color_estado }}-emphasis">{{ accion.get_estado_display }}</span>
         </div>
-        <div class="mb-3"><strong>Área:</strong> Gestión interna</div>
+        <div class="mb-3"><strong>Área:</strong> {{ accion.get_area_display }}</div>
 
         <div class="row g-4">
             <div class="col-md-7">
                 <h6 class="fw-bold">Descripción</h6>
-                <p class="bg-light rounded p-3 small">Implementar una herramienta digital para registrar y controlar el inventario de productos, lo que permitirá evitar quiebres de stock y mejorar la planificación de compras.</p>
+                <p class="bg-light rounded p-3 small">{{ accion.descripcion }}</p>
 
                 <h6 class="fw-bold">Pasos sugeridos</h6>
                 <ol class="list-unstyled">
-                    <li class="d-flex align-items-center gap-2 mb-2"><span class="badge rounded-circle bg-secondary-subtle text-secondary-emphasis">1</span>Evaluar las herramientas recomendadas</li>
-                    <li class="d-flex align-items-center gap-2 mb-2"><span class="badge rounded-circle bg-secondary-subtle text-secondary-emphasis">2</span>Registrar el inventario actual</li>
-                    <li class="d-flex align-items-center gap-2 mb-2"><span class="badge rounded-circle bg-secondary-subtle text-secondary-emphasis">3</span>Capacitar al equipo en el uso de la herramienta</li>
+                    {% for paso in accion.lista_pasos %}
+                    <li class="d-flex align-items-center gap-2 mb-2">
+                        <span class="badge rounded-circle bg-secondary-subtle text-secondary-emphasis">{{ forloop.counter }}</span>
+                        {{ paso }}
+                    </li>
+                    {% endfor %}
                 </ol>
             </div>
             <div class="col-md-5">
@@ -34,22 +37,16 @@
         </div>
 
         <hr>
-        <form method="POST" action="" class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+        <form method="POST" class="d-flex align-items-center justify-content-between flex-wrap gap-3">
             {% csrf_token %}
             <div>
                 <div class="fw-semibold mb-1">Actualizar estado de la acción</div>
+                {% for valor, etiqueta in estados %}
                 <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="estado" id="e1" value="Pendiente">
-                    <label class="form-check-label" for="e1">Pendiente</label>
+                    <input class="form-check-input" type="radio" name="estado" id="e{{ forloop.counter }}" value="{{ valor }}" {% if accion.estado == valor %}checked{% endif %}>
+                    <label class="form-check-label" for="e{{ forloop.counter }}">{{ etiqueta }}</label>
                 </div>
-                <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="estado" id="e2" value="En progreso" checked>
-                    <label class="form-check-label" for="e2">En progreso</label>
-                </div>
-                <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="estado" id="e3" value="Completada">
-                    <label class="form-check-label" for="e3">Completada</label>
-                </div>
+                {% endfor %}
             </div>
             <button type="submit" class="btn btn-primary px-4">Guardar cambios</button>
         </form>
