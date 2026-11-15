@@ -12,4 +12,7 @@ urlpatterns = [
     path('login/', views.login_view, name='login'),
     path('registro/', views.registro, name='registro'),
     path('logout/', views.logout_view, name='logout'),
+        path('pyme/nueva/', views.nueva_pyme, name='nueva_pyme'),
+    path('pyme/seleccionar/', views.seleccionar_pyme, name='seleccionar_pyme'),
+    
 ]

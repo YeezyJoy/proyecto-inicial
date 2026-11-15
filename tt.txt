@@ -1,0 +1,32 @@
+--Convierte el puntaje de un área (0 a 100) en una prioridad. Por debajo de 40 
+devuelve Alta, entre 40 y 69 Media, y de 70 en adelante Baja: menos puntaje 
+significa más brecha digital, o sea más urgencia. Los umbrales están como 
+constantes arriba para poder ajustarlos sin tocar la lógica.
+
+UMBRAL_ALTA = 40
+UMBRAL_MEDIA = 70
+
+def severidad_por_puntaje(puntaje):
+    if puntaje < UMBRAL_ALTA:
+        return Prioridad.ALTA
+    if puntaje < UMBRAL_MEDIA:
+        return Prioridad.MEDIA
+    return Prioridad.BAJA
+
+
+    --Recorre las preguntas respondidas y acumula, por área, dos números: la suma 
+    de las respuestas ([0]) y el máximo posible ([1], que suma 3 por pregunta). 
+    Luego, para cada área, calcula el porcentaje (suma * 100 / maximo) y lo redondea.
+    Con ese puntaje llama a la función de severidad por puntaje y convierte 
+    el resultado a entero (int) para guardarlo en la base de datos. Usar 
+    porcentaje permite comparar áreas aunque tengan distinta cantidad de preguntas.
+
+        for p in preguntas:
+        valor = respuestas[str(p.id)]
+        totales[p.area][0] += valor
+        totales[p.area][1] += VALOR_MAX
+
+    for area, (suma, maximo) in totales.items():
+        puntaje = round(suma * 100 / maximo)
+        severidad = int(severidad_por_puntaje(puntaje))
+

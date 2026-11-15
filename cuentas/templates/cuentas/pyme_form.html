@@ -1,0 +1,35 @@
+{% extends 'cuentas/base.html' %}
+{% block content %}
+<h3 class="fw-bold mb-1">Registrar Pyme</h3>
+<p class="text-muted">Estos datos se guardan y se usan en tu diagnóstico y plan.</p>
+
+<form method="POST" class="card border-0 shadow-sm">
+    {% csrf_token %}
+    <div class="card-body">
+        <div class="mb-3">
+            <label class="form-label">Nombre del negocio</label>
+            <input type="text" class="form-control" name="nombre" value="{{ datos.nombre }}" required>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Rubro</label>
+            <input type="text" class="form-control" name="rubro" value="{{ datos.rubro }}" placeholder="Ej: Alimentación" required>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Tamaño</label>
+            <select class="form-select" name="tamano" required>
+                {% for t in tamanos %}
+                    <option value="{{ t }}" {% if datos.tamano == t %}selected{% endif %}>{{ t }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Región</label>
+            <input type="text" class="form-control" name="region" value="{{ datos.region }}" placeholder="Ej: Valparaíso" required>
+        </div>
+        <div class="d-flex justify-content-between">
+            <a href="{% url 'home' %}" class="btn btn-outline-secondary">Cancelar</a>
+            <button type="submit" class="btn btn-primary px-4">Guardar Pyme</button>
+        </div>
+    </div>
+</form>
+{% endblock %}

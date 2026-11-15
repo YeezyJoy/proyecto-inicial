@@ -8,10 +8,11 @@ from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
 from django.views.decorators.http import require_POST
 
-from .models import Accion, Area, Pregunta, OPCIONES_RESPUESTA
+from .models import Accion, Area, Pregunta, Pyme, OPCIONES_RESPUESTA
 from .servicios import generar_plan, calcular_progreso, crear_diagnostico
 
 AREAS_POR_PASO = {1: Area.GESTION, 2: Area.COMERCIAL, 3: Area.FINANZAS}
+TAMANOS = ['Micro', 'Pequeña', 'Mediana']
 
 
 # ---------- Autenticación ----------
@@ -62,8 +63,15 @@ def logout_view(request):
 
 # ---------- Ayudas internas ----------
 
+def _pyme_actual(request):
+    pymes = request.user.pymes.all()
+    pyme_id = request.session.get('pyme_id')
+    pyme = pymes.filter(id=pyme_id).first() if pyme_id else None
+    return pyme or pymes.first()
+
+
 def _pyme_y_diagnostico(request):
-    pyme = request.user.pymes.first()
+    pyme = _pyme_actual(request)
     diag = pyme.diagnosticos.first() if pyme else None
     return pyme, diag
 
@@ -85,11 +93,38 @@ def home(request):
 
 
 @login_required
+def nueva_pyme(request):
+    datos = {}
+    if request.method == 'POST':
+        datos = {c: request.POST.get(c, '').strip()
+                 for c in ('nombre', 'rubro', 'tamano', 'region')}
+        if not all(datos.values()) or datos['tamano'] not in TAMANOS:
+            messages.error(request, 'Completa todos los campos.')
+        else:
+            pyme = Pyme.objects.create(usuario=request.user, **datos)
+            request.session['pyme_id'] = pyme.id
+            messages.success(request, 'Pyme registrada.')
+            return redirect('home')
+    return render(request, 'cuentas/pyme_form.html', {
+        'activo': 'inicio', 'tamanos': TAMANOS, 'datos': datos,
+    })
+
+
+@login_required
+@require_POST
+def seleccionar_pyme(request):
+    pid = request.POST.get('pyme_id', '')
+    if pid.isdigit() and request.user.pymes.filter(id=pid).exists():
+        request.session['pyme_id'] = int(pid)
+    return redirect('home')
+
+
+@login_required
 def encuesta(request, paso):
     if paso not in AREAS_POR_PASO:
         raise Http404
 
-    pyme = request.user.pymes.first()
+    pyme = _pyme_actual(request)
     if pyme is None:
         messages.info(request, 'Primero necesitas una Pyme registrada.')
         return redirect('home')
