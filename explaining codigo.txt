@@ -1,0 +1,62 @@
+  class Meta:
+        ordering = ['-severidad', 'id']
+
+Le dice a Django que, cada vez que se pidan las brechas de un diagnóstico, 
+las entregue de mayor a menor severidad (el - significa descendente). 
+Por eso el plan sale ordenado por prioridad sin escribir ningún código de ordenamiento.
+
+
+  orden = 1
+    for brecha in diagnostico.brechas.all():  # de mayor a menor severidad
+        plantillas = PlantillaAccion.objects.filter(
+            area=brecha.area,
+            puntaje_min__lte=brecha.puntaje,
+            puntaje_max__gte=brecha.puntaje,
+        )
+        for plantilla in plantillas:
+            Accion.objects.create(
+                diagnostico=diagnostico,
+                titulo=plantilla.titulo,
+                area=brecha.area,
+                descripcion=plantilla.descripcion,
+                pasos=plantilla.pasos,
+                prioridad=brecha.severidad,
+                orden=orden,
+            )
+            orden += 1
+
+Es el corazón de la funcionalidad:
+
+orden = 1 es un contador para numerar las acciones del plan.
+El for brecha recorre las áreas empezando por la más débil (gracias al fragmento 1).
+El filter busca, en el catálogo de planes prefabricados, las acciones del mismo
+ área cuyo rango de puntaje incluye el puntaje de esa área. 
+ __lte significa «menor o igual» y __gte «mayor o igual». 
+ Ejemplo: un área con 35 puntos recibe 
+ «Implementar inventario» (rango 0 a 69) pero no «Organizar tareas» (rango 40 a 100).
+Accion.objects.create(...) guarda en la base de datos una acción para esa Pyme,
+ copiando los datos de la plantilla. La acción hereda la prioridad de su área 
+ (prioridad=brecha.severidad) y recibe su posición en el plan (orden).
+
+
+     accion = get_object_or_404(Accion, id=accion_id, diagnostico__pyme__usuario=request.user)
+
+    if request.method == 'POST':
+        nuevo = request.POST.get('estado')
+        if nuevo in Accion.Estado.values:
+            accion.estado = nuevo
+            accion.save(update_fields=['estado', 'actualizado'])
+            
+get_object_or_404 busca la acción por su id, 
+pero solo si pertenece a una Pyme del usuario que inició sesión. 
+Si no, responde «no encontrado». Así nadie edita acciones ajenas 
+cambiando el número en la URL.
+if request.method == 'POST' hace que solo se modifiquen datos cuando se envía el 
+formulario, no al abrir la página.
+if nuevo in Accion.Estado.values valida que el estado sea uno de los tres 
+permitidos (Pendiente, En progreso, Completada) en vez de confiar en lo que mande 
+el navegador.
+accion.save(update_fields=[...]) guarda en SQLite solo esos dos campos.
+
+        'porcentaje': round(completadas * 100 / total) if total else 0,
+        este es el calculo del progreso
