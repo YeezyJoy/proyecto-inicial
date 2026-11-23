@@ -30,7 +30,7 @@ class Pyme(models.Model):
     nombre = models.CharField(max_length=120)
     rubro = models.CharField(max_length=80)
     tamano = models.CharField('tamaño', max_length=40)
-    region = models.CharField(max_length=80)
+    comuna = models.CharField(max_length=80)
 
     def __str__(self):
         return self.nombre

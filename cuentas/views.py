@@ -97,7 +97,7 @@ def nueva_pyme(request):
     datos = {}
     if request.method == 'POST':
         datos = {c: request.POST.get(c, '').strip()
-                 for c in ('nombre', 'rubro', 'tamano', 'region')}
+                 for c in ('nombre', 'rubro', 'tamano', 'comuna')}
         if not all(datos.values()) or datos['tamano'] not in TAMANOS:
             messages.error(request, 'Completa todos los campos.')
         else:
